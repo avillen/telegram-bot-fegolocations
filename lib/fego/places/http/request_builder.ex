@@ -3,9 +3,6 @@ defmodule Fego.Places.Http.RequestBuilder do
   Module to build the Places.Http requests
   """
 
-  @client_id Application.get_env(:fego, :locations)[:client_id]
-  @client_secret Application.get_env(:fego, :locations)[:client_secret]
-
   def build_query_params,
     do: "?#{secrets_build()}"
 
@@ -32,6 +29,8 @@ defmodule Fego.Places.Http.RequestBuilder do
 
   defp to_param(key, value), do: "#{Atom.to_string(key)}=#{value}"
 
-  defp v, do: "20191118"
-  defp secrets_build, do: "client_id=#{@client_id}&client_secret=#{@client_secret}&v=#{v()}"
+  defp v, do: Date.to_iso8601(DateTime.utc_now(), :basic)
+  defp client_id, do: Application.get_env(:fego, :locations)[:client_id]
+  defp client_secret, do: Application.get_env(:fego, :locations)[:client_secret]
+  defp secrets_build, do: "client_id=#{client_id()}&client_secret=#{client_secret()}&v=#{v()}"
 end

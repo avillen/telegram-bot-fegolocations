@@ -11,7 +11,7 @@ defmodule Fego.Places.HttpTest do
 
   import Mox
 
-  @base_url "https://api.foursquare.com/v2/venues"
+  @base_url Application.get_env(:fego, :locations)[:url]
 
   describe "fetch_by_near/2" do
     test "success" do

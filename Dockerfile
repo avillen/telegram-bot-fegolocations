@@ -1,21 +1,33 @@
-FROM elixir:1.10.3-alpine
+FROM elixir:1.10.4-alpine as build
 
-EXPOSE 4000
-
-ENV MIX_HOME=/opt/mix
 ENV MIX_ENV=prod
 
-ENV FOURSQUARE_CLIENT_ID=$FOURSQUARE_CLIENT_ID
-ENV FOURSQUARE_CLIENT_SECRET=$FOURSQUARE_CLIENT_SECRET
-ENV FEGO_TELEGRAM_TOKEN=$FEGO_TELEGRAM_TOKEN
-
-WORKDIR "/opt/app"
-
+WORKDIR /app
 RUN mix local.hex --force && mix local.rebar --force
 
-COPY mix.exs mix.lock ./
+# Install dependencies
+COPY mix.exs mix.lock config ./
+COPY config config
 RUN mix do deps.get, deps.compile
 
-COPY . ./
+# Compile and build the app
+COPY lib lib
+RUN mix do compile, release
 
-CMD ["mix", "run", "--no-halt"]
+
+############################################################################
+# prepare release image
+
+FROM alpine:3.12 AS app
+RUN apk add --no-cache openssl ncurses-libs
+
+WORKDIR /app
+
+RUN chown nobody:nobody /app
+USER nobody:nobody
+COPY --from=build --chown=nobody:nobody /app/_build/prod/rel/fego ./
+
+ENV HOME=/app
+
+CMD ["bin/fego", "start"]
+

@@ -5,7 +5,7 @@ defmodule Fego.MixProject do
     [
       app: :fego,
       version: "0.1.0",
-      elixir: "~> 1.10.3",
+      elixir: "~> 1.10.4",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -21,13 +21,13 @@ defmodule Fego.MixProject do
 
   defp deps do
     [
-      {:ex_gram, "~> 0.14"},
-      {:tesla, "~> 1.3"},
-      {:hackney, "~> 1.16"},
-      {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.0"},
+      {:ex_gram, "~> 0.14.0"},
+      {:tesla, "~> 1.3.3"},
+      {:hackney, "~> 1.16.0"},
+      {:jason, "~> 1.2.1"},
+      {:plug_cowboy, "~> 2.3.0"},
       # Dev/Test
-      {:mox, "~> 0.5", only: :test}
+      {:mox, "~> 0.5.2", only: :test}
     ]
   end
 

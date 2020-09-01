@@ -2,9 +2,7 @@ version: '3.7'
 
 services:
   fego:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     env_file: .env
     restart: always
 
